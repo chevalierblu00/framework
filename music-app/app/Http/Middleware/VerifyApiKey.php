@@ -17,14 +17,18 @@ class VerifyApiKey
      */
     public function handle(Request $request, Closure $next)
     {
+        // Lire la valeur de l'en-tête 'x-api-key'
         $apiKeyValue = $request->header('x-api-key');
 
+        // Vérifiez si la clé API est présente
         if (!$apiKeyValue) {
             return response()->json(['message' => 'API key is missing'], 401);
         }
 
-        $apiKey = Apikeys::where('key', $apiKeyValue)->first();
+        // Rechercher la clé API dans la base de données
+        $apiKey = apikeys::where('key', $apiKeyValue)->first();
 
+        // Vérifiez si la clé API est valide
         if (!$apiKey) {
             return response()->json(['message' => 'Invalid API key'], 401);
         }
